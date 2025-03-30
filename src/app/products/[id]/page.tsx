@@ -3,8 +3,11 @@ import { RelatedProducts } from "@/components/related-products";
 import { getProductById } from "@/lib/products";
 import { notFound } from "next/navigation";
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = getProductById(params.id);
+type Params = Promise<{ id: string }>;
+
+export default async function ProductPage({ params }: { params: Params }) {
+  const { id } = await params;
+  const product = getProductById(id);
 
   if (!product) {
     notFound();
@@ -13,7 +16,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   return (
     <div className="container px-4 md:px-6 py-8 md:py-12 mx-auto">
       <ProductDetails product={product} />
-      <RelatedProducts productId={params.id} />
+      <RelatedProducts productId={id} />
     </div>
   );
 }
